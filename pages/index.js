@@ -1,8 +1,12 @@
-import { useState } from 'react';
-import Head from 'next/head';
-import styles from '../styles/Home.module.css';
-import CodeSampleModal from '../components/CodeSampleModal';
-import Image from 'next/image';
+import { useState } from "react";
+import Head from "next/head";
+import styles from "../styles/Home.module.css";
+import Image from "next/image";
+import dynamic from "next/dynamic";
+
+const CodeSampleModal = dynamic(() => import("../components/CodeSampleModal"), {
+  ssr: false,
+});
 
 export default function Start({ countries }) {
   const [results, setResults] = useState(countries);
@@ -26,7 +30,12 @@ export default function Start({ countries }) {
         </h1>
 
         <div className={styles.heroImage}>
-          <Image src="/large-image.jpg" alt="Large Image" width={3048} height={2024} />
+          <Image
+            src="/large-image.jpg"
+            alt="Large Image"
+            width={3048}
+            height={2024}
+          />
         </div>
 
         <div>
@@ -39,11 +48,11 @@ export default function Start({ countries }) {
               const { value } = e.currentTarget;
 
               // Dynamically load libraries
-              const Fuse = (await import('fuse.js')).default;
-              const _ = (await import('lodash')).default;
+              const Fuse = (await import("fuse.js")).default;
+              const _ = (await import("lodash")).default;
 
               const fuse = new Fuse(countries, {
-                keys: ['name'],
+                keys: ["name"],
                 threshold: 0.3,
               });
 
@@ -102,7 +111,7 @@ export default function Start({ countries }) {
 }
 
 export async function getServerSideProps() {
-  const response = await fetch('https://restcountries.com/v3.1/all');
+  const response = await fetch("https://restcountries.com/v3.1/all");
   const countries = await response.json();
 
   return {
